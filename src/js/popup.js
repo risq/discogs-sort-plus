@@ -10,14 +10,13 @@ class ExtensionPopup {
 
   initElements() {
     this.$els = {
-      actionsContainer: $('.actions-container'),
       sortActions: $('.sort-action'),
       totalItemsCount: $('.total-items-count'),
       totalPagesCount: $('.total-pages-count'),
       status: $('.status'),
     };
 
-    this.hideButtons();
+    this.disableActionButtons();
   }
 
   initEvents() {
@@ -38,7 +37,7 @@ class ExtensionPopup {
   }
 
   sort(sortMethod) {
-    this.$els.actionsContainer.hide();
+    this.disableActionButtons();
     this.sendMessage(sortMethod);
   }
 
@@ -62,19 +61,19 @@ class ExtensionPopup {
 
       this.$els.totalItemsCount.text(` (${this.totalItemsCount} items, ${this.totalPagesCount} pages)`);
       this.$els.totalPagesCount.text(this.totalPagesCount);
-      this.showButtons();
+      this.enableActionButtons();
     } else {
       this.$els.status.text('The current page cannot be sorted.');
     }
   }
 
   onSortSuccess(count) {
-    this.showButtons()
+    this.enableActionButtons()
     this.$els.status.text(`Sorted ${count} items.`);
   }
 
   onSortError(err) {
-    this.showButtons()
+    this.enableActionButtons()
     this.$els.status.text('Error fetching pages.');
   }
 
@@ -82,12 +81,12 @@ class ExtensionPopup {
     this.$els.status.text(`Downloading page ${pagesCount}/${this.totalPagesCount}`);
   }
 
-  showButtons() {
-    this.$els.actionsContainer.show();
+  disableActionButtons() {
+    this.$els.sortActions.attr('disabled', 'disabled');
   }
 
-  hideButtons() {
-    this.$els.actionsContainer.hide();
+  enableActionButtons() {
+    this.$els.sortActions.attr('disabled', false);
   }
 }
 
