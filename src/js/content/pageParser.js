@@ -124,7 +124,7 @@ export default new class Pages {
       const haveWantCountScore = (item.have + item.want) / maxHaveWantCount;
       const haveWantRatioScore = item.want > item.have ? 1 : item.want / item.have;
 
-      item.score = ratingScore * 3 + haveWantCountScore + haveWantRatioScore;
+      item.score = ratingScore * 3 + haveWantCountScore * 2 + haveWantRatioScore;
     });
 
     return items;

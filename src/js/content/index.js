@@ -17,6 +17,7 @@ class ExtensionClient {
     this.$els = {
       nextLink: $('.pagination_next'),
       table: $('.table_block tbody'),
+      ui: $('#page_aside, .tab_menu, .pagination, .actions_with_tabs, .table_block th'),
     };
   }
 
@@ -52,10 +53,14 @@ class ExtensionClient {
   }
 
   sortAllPages(sortMethod) {
+    this.hideUi();
     pageParser.getAllPagesItems()
       .then(items => this.sortItems(items, sortMethod))
       .then(items => messageBus.sendMessage('sort:success', { count: items.length }))
-      .catch(err => messageBus.sendMessage('sort:error', { err }))
+      .catch(err => {
+        this.showUi();
+        messageBus.sendMessage('sort:error', { err })
+      });
   }
 
   sortItems(items, sortMethod) {
@@ -74,6 +79,14 @@ class ExtensionClient {
 
   addItem(el) {
     this.$els.table.append(el);
+  }
+
+  hideUi() {
+    this.$els.ui.css({ opacity: 0 });
+  }
+
+  showUi() {
+    this.$els.ui.css({ opacity: 1 });
   }
 
   compareRatings(a, b) {
