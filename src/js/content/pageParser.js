@@ -95,8 +95,8 @@ export default new class Pages {
 
   getTotalItemsCount() {
     const regexp = /.*\sof\s(\d*)/gi;
-    const paginationText = $('.pagination_total').text();
-    const res = regexp.exec(paginationText)
+    const paginationText = $('.pagination_total').text().replace(',', '');
+    const res = regexp.exec(paginationText);
     return res && res[1] && res[1].length ? res[1] : 0;
   }
 

@@ -14,9 +14,12 @@ class ExtensionPopup {
       totalItemsCount: $('.total-items-count'),
       totalPagesCount: $('.total-pages-count'),
       status: $('.status'),
+      progress: $('.progress'),
+      unavailableText: $('.unavailable'),
     };
 
     this.disableActionButtons();
+    this.hideUnavailableText();
   }
 
   initEvents() {
@@ -38,6 +41,7 @@ class ExtensionPopup {
 
   sort(sortMethod) {
     this.disableActionButtons();
+    this.setStatusText('Retrieving pages...');
     this.sendMessage(sortMethod);
   }
 
@@ -63,13 +67,13 @@ class ExtensionPopup {
       this.$els.totalPagesCount.text(this.totalPagesCount);
       this.enableActionButtons();
     } else {
-      this.$els.status.text('The current page cannot be sorted.');
+      this.showUnavailableText();
     }
   }
 
   onSortSuccess(count) {
     this.enableActionButtons()
-    this.$els.status.text(`Sorted ${count} items.`);
+    this.setStatusText(`Sorted ${count} items.`);
   }
 
   onSortError(err) {
@@ -78,7 +82,16 @@ class ExtensionPopup {
   }
 
   onGetPage(pagesCount) {
-    this.$els.status.text(`Downloading page ${pagesCount}/${this.totalPagesCount}`);
+    this.setPageDownloadProgress(pagesCount, this.totalPagesCount);
+  }
+
+  setStatusText(text) {
+    this.$els.status.text(text);
+  }
+
+  setPageDownloadProgress(pagesCount, totalPagesCount) {
+    this.$els.status.text(`Downloaded page ${pagesCount}/${totalPagesCount}.`);
+    this.$els.progress.css({ width: `${Math.floor(pagesCount / totalPagesCount * 100)}%` });
   }
 
   disableActionButtons() {
@@ -87,6 +100,14 @@ class ExtensionPopup {
 
   enableActionButtons() {
     this.$els.sortActions.attr('disabled', false);
+  }
+
+  showUnavailableText() {
+    this.$els.unavailableText.show();
+  }
+
+  hideUnavailableText() {
+    this.$els.unavailableText.hide();
   }
 }
 

@@ -1,0 +1,119 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  background-color: #222222;
+  color: #fefefe;
+}
+
+.title {
+  text-transform: uppercase;
+  text-align: center;
+  font-size: 16px;
+  letter-spacing: 1px;
+  border-bottom: 1px solid #000;
+  box-shadow: inset 0 -1px 0 #262626;
+  background: #333;
+  padding: 14px 0 12px;
+  font-family: "Arial Black", Gadget, sans-serif;
+}
+
+main {
+  position: relative;
+}
+
+p {
+  padding: 10px 16px 0;
+  margin: 0;
+}
+
+.infos {
+  padding: 8px 16px;
+  font-style: italic;
+  font-size: 13px;
+  background-color: rgba(0,0,0,0.7);
+  margin-top: 16px;
+}
+
+.actions-container:after {
+  clear: both;
+  content: " ";
+  display: block;
+}
+
+button {
+  background-color: #bbb;
+  color: #333;
+  font-weight: 700;
+  width: 50%;
+  margin: 0;
+  display: block;
+  float: left;
+  cursor: pointer;
+  border: 0;
+  text-transform: uppercase;
+  font-size: 14px;
+  padding: 16px 0;
+  border-right: 1px dotted rgba(0,0,0,0.3);
+  border-bottom: 1px dotted rgba(0,0,0,0.3);
+  box-sizing: border-box;
+  transition: all 0.3s ease-in-out;
+}
+
+button:hover {
+  background-color: #ddd;
+}
+
+button:active {
+  background-color: #eee;
+}
+
+button:disabled {
+  background-color: #bbb;
+  color: #ccc;
+  cursor: wait;
+}
+
+button:nth-child(2n) {
+  border-right: none;
+}
+
+button:nth-last-child(-n+2) {
+  border-bottom: none;
+}
+
+.status-container {
+  position: relative;
+}
+
+.progress {
+  width: 0;
+  height: 4px;
+  top: 0;
+  left: 0;
+  background-color: #4588C4;
+  position: absolute;
+  transition: width 0.1s ease-in-out;
+}
+
+.status {
+  padding: 8px 16px;
+}
+
+.unavailable {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(28, 28, 28, 0.95);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+}
+
+.unavailable span {
+  padding: 0 10%;
+  font-size: 14px;
+  font-style: italic;
+}

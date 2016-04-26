@@ -2,25 +2,45 @@
 <html>
   <head>
     <title>Discogs Sort Plus</title>
+    <link rel="stylesheet" type="text/css" href="css/popup.css"  />
   </head>
   <body style="width: 300px">
-    <h3>Discogs Sort Plus</h3>
-    <p>
-      By clicking on one of the following buttons, Discogs Sort Plus will load
-      every item from every page of your current selection<b class="total-items-count"></b>.
-      This may take a long time depending on the number of pages to load.
-      Feel free to filter your selection in order to reduce the number of items.
-    </p>
-    <div class="actions-container">
-      <i>Load <b class="total-pages-count"></b> page(s) and sort...</i>
-      <button class="sort-action" data-sort="sort:rating">by rating</button>
-      <button class="sort-action" data-sort="sort:have">by "have"</button>
-      <button class="sort-action" data-sort="sort:want">by "want"</button>
-      <button class="sort-action" data-sort="sort:score">by score</button>
+    <div class="title">
+      Discogs Sort <b>Plus</b>
     </div>
-    <div class="status">
-
-    </div>
+    <main>
+      <p>
+        By clicking on one of the following buttons, Discogs Sort Plus will load
+        <b>every item</b> from <b>every page</b> of your current
+        selection<b class="total-items-count"></b>.
+      </p>
+      <p>
+        This may take a long time depending on the number of pages to load.
+        Feel free to filter your selection in order to reduce the number of
+        items.
+      </p>
+      <div class="infos">
+        Load <b class="total-pages-count"></b> page(s) and sort by...
+      </div>
+      <div class="actions-container">
+        <button class="sort-action" data-sort="sort:score">score</button>
+        <button class="sort-action" data-sort="sort:rating">rating</button>
+        <button class="sort-action" data-sort="sort:have">have</button>
+        <button class="sort-action" data-sort="sort:want">want</button>
+      </div>
+      <div class="status-container">
+        <div class="progress"></div>
+        <div class="status">
+          &nbsp;
+        </div>
+      </div>
+      <div class="unavailable">
+        <span>
+          The current page cannot be sorted. You must be on a Discogs
+          marketplace page to use Discogs Sort Plus.
+        </span>
+      </div>
+    </main>
 
     <script src="common.js"></script>
     <script src="popup.js"></script>

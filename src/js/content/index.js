@@ -44,6 +44,11 @@ class ExtensionClient {
     if (!totalItemsCount && !itemsPerPageCount) {
       reply({err: true});
     } else {
+      console.log({
+        err: null,
+        totalItemsCount: pageParser.getTotalItemsCount(),
+        itemsPerPageCount: pageParser.getItemsPerPageCount(),
+      });
       reply({
         err: null,
         totalItemsCount: pageParser.getTotalItemsCount(),
