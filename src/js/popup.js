@@ -46,8 +46,6 @@ class ExtensionPopup {
   }
 
   sendMessage(message, callback) {
-    console.log('Sending message', message);
-
     chrome.tabs.query({currentWindow: true, active: true}, tabs => {
       if (callback) {
         chrome.tabs.sendMessage(tabs[0].id, { message }, callback);
@@ -65,7 +63,15 @@ class ExtensionPopup {
 
       this.$els.totalItemsCount.text(` (${this.totalItemsCount} items, ${this.totalPagesCount} pages)`);
       this.$els.totalPagesCount.text(this.totalPagesCount);
-      this.enableActionButtons();
+
+      this.setStatusText('Ready.');
+
+      if (res.state === 'ready') {
+        this.enableActionButtons();
+      } else {
+        this.disableActionButtons();
+        this.setStatusText('Retrieving pages...');
+      }
     } else {
       this.showUnavailableText();
     }

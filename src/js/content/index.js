@@ -11,6 +11,8 @@ class ExtensionClient {
   constructor() {
     this.initElements();
     this.initEvents();
+
+    this.state = 'ready';
   }
 
   initElements() {
@@ -38,32 +40,40 @@ class ExtensionClient {
   }
 
   onInit(reply) {
-    const totalItemsCount = pageParser.getTotalItemsCount();
-    const itemsPerPageCount = pageParser.getItemsPerPageCount();
-
-    if (!totalItemsCount && !itemsPerPageCount) {
+    if (!this.isAvailable()) {
       reply({err: true});
     } else {
       console.log({
         err: null,
+        state: this.state,
         totalItemsCount: pageParser.getTotalItemsCount(),
         itemsPerPageCount: pageParser.getItemsPerPageCount(),
-      });
+      })
       reply({
         err: null,
+        state: this.state,
         totalItemsCount: pageParser.getTotalItemsCount(),
         itemsPerPageCount: pageParser.getItemsPerPageCount(),
       });
     }
   }
 
+  isAvailable() { // TODO
+    return pageParser.getTotalItemsCount() > 0;
+  }
+
   sortAllPages(sortMethod) {
     this.hideUi();
+    this.state = 'sorting';
     pageParser.getAllPagesItems()
       .then(items => this.sortItems(items, sortMethod))
-      .then(items => messageBus.sendMessage('sort:success', { count: items.length }))
+      .then(items => {
+        this.state = 'ready';
+        messageBus.sendMessage('sort:success', { count: items.length });
+      })
       .catch(err => {
         this.showUi();
+        this.state = 'ready';
         messageBus.sendMessage('sort:error', { err })
       });
   }
