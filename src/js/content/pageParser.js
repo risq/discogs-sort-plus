@@ -17,7 +17,7 @@ export default new class Pages {
     return bluebird.props({
       prevPagesItems: this.loadPrevPages(this.getPrevPageLink()),
       nextPagesItems: this.loadNextPages(this.getNextPageLink()),
-    }).then(({ prevPagesItems, nextPagesItems }) => this.calculateScore([
+    }).then(({ prevPagesItems, nextPagesItems }) => this.calculateScores([
       ...prevPagesItems,
       ...nextPagesItems,
       ...this.getCurrentPageItems()
@@ -120,15 +120,17 @@ export default new class Pages {
     return parseInt($(itemNode).find('.want_indicator').next().text() || 0);
   }
 
-  calculateScore(items) {
+  calculateScores(items) {
     const maxHaveWantCount = Math.max.apply(Math, items.map(item => item.have + item.want));
 
     items.forEach(item => {
       const ratingScore = item.rating / 5
       const haveWantCountScore = (item.have + item.want) / maxHaveWantCount;
-      const haveWantRatioScore = item.want > item.have ? 1 : item.want / item.have;
+      const haveWantRatioScore = item.have === 0 || item.want === 0 ? 0 :
+        item.want >= item.have ? 1 - item.have / item.want / 2 : item.want / item.have / 2;
 
-      item.score = ratingScore * 3 + haveWantCountScore * 2 + haveWantRatioScore;
+      item.score = Math.pow(ratingScore, 4) * Math.pow(haveWantCountScore, 2) * haveWantRatioScore;
+      item.rarity = Math.pow(haveWantRatioScore, 6) * haveWantCountScore;
     });
 
     return items;

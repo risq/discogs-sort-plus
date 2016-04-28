@@ -2,7 +2,10 @@ import bluebird from 'bluebird';
 import pageParser from './pageParser';
 import messageBus from './messageBus';
 
-const compareRating = (a, b) => a.rating - b.rating;
+const compareRating = (a, b) => {
+  const n = a.rating - b.rating;
+  return n === 0 ? compareScore(a, b) : n;
+};
 const compareWant = (a, b) => a.want - b.want;
 const compareHave = (a, b) => a.have - b.have;
 const compareScore = (a, b) => a.score - b.score;
@@ -102,22 +105,6 @@ class ExtensionClient {
 
   showUi() {
     this.$els.ui.css({ opacity: 1 });
-  }
-
-  compareRatings(a, b) {
-    return a.rating - b.rating;
-  }
-
-  compareHave(a, b) {
-    return a.have - b.have;
-  }
-
-  compareWant(a, b) {
-    return a.have - b.have;
-  }
-
-  compareScore(a, b) {
-    return a.score - b.score;
   }
 }
 
