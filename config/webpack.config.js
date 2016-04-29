@@ -9,7 +9,6 @@ module.exports = {
     content: './content/index.js',
     reload: './reload.js',
     common: [
-      'lodash',
       'jquery',
       'bluebird',
     ],
@@ -59,7 +58,6 @@ module.exports = {
 
   plugins: [
     new webpack.ProvidePlugin({
-      _: 'lodash',
       $: 'jquery',
       jQuery: 'jquery',
     }),
