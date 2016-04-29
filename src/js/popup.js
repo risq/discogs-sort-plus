@@ -83,7 +83,7 @@ class ExtensionPopup {
   }
 
   onSortError(err) {
-    this.enableActionButtons()
+    this.enableActionButtons();
     this.$els.status.text('Error fetching pages.');
   }
 

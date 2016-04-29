@@ -2,13 +2,12 @@ import bluebird from 'bluebird';
 import pageParser from './pageParser';
 import messageBus from './messageBus';
 
-const compareRating = (a, b) => {
-  const n = a.rating - b.rating;
-  return n === 0 ? compareScore(a, b) : n;
-};
-const compareWant = (a, b) => a.want - b.want;
-const compareHave = (a, b) => a.have - b.have;
 const compareScore = (a, b) => a.score - b.score;
+const compareRating = (a, b) => a.rating !== b.rating ? a.rating - b.rating : compareScore(a, b);
+const compareRarity = (a, b) => a.rarity !== b.rarity ? a.rarity - b.rarity : compareScore(a, b);
+const compareHaveWant = (a, b) => a.haveWant !== b.haveWant ? a.haveWant - b.haveWant : compareScore(a, b);
+const compareHave = (a, b) => a.have !== b.have ? a.have - b.have : compareScore(a, b);
+const compareWant = (a, b) => a.want !== b.want ? a.want - b.want : compareScore(a, b);
 
 class ExtensionClient {
   constructor() {
@@ -30,14 +29,18 @@ class ExtensionClient {
     messageBus.onMessage((message, reply) => {
       if (message === 'init') {
         this.onInit(reply);
-      } if (message === 'sort:rating') {
-        this.sortAllPages(compareRating);
-      } else if (message === 'sort:want') {
-        this.sortAllPages(compareWant);
-      } else if (message === 'sort:have') {
-        this.sortAllPages(compareHave);
       } else if (message === 'sort:score') {
         this.sortAllPages(compareScore);
+      } else if (message === 'sort:rating') {
+        this.sortAllPages(compareRating);
+      } else if (message === 'sort:rarity') {
+        this.sortAllPages(compareRarity);
+      } else if (message === 'sort:haveWant') {
+        this.sortAllPages(compareHaveWant);
+      } else if (message === 'sort:have') {
+        this.sortAllPages(compareHave);
+      } else if (message === 'sort:want') {
+        this.sortAllPages(compareWant);
       }
     });
   }
@@ -78,6 +81,7 @@ class ExtensionClient {
         this.showUi();
         this.state = 'ready';
         messageBus.sendMessage('sort:error', { err })
+        console.log(err);
       });
   }
 

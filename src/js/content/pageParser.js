@@ -41,7 +41,6 @@ export default new class Pages {
 
   loadPrevPages(link, data = []) {
     if (!link) {
-      console.log('Done loading pages');
       return bluebird.resolve(data);
     }
 
@@ -131,6 +130,7 @@ export default new class Pages {
 
       item.score = Math.pow(ratingScore, 4) * Math.pow(haveWantCountScore, 2) * haveWantRatioScore;
       item.rarity = Math.pow(haveWantRatioScore, 6) * haveWantCountScore;
+      item.haveWant = item.have + item.want;
     });
 
     return items;
