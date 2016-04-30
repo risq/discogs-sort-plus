@@ -128,7 +128,7 @@ export default new class Pages {
       const haveWantRatioScore = item.have === 0 || item.want === 0 ? 0 :
         item.want >= item.have ? 1 - item.have / item.want / 2 : item.want / item.have / 2;
 
-      item.score = Math.pow(ratingScore, 4) * Math.pow(haveWantCountScore, 2) * haveWantRatioScore;
+      item.score = Math.pow(ratingScore, 8) * Math.pow(haveWantCountScore, 2) * haveWantRatioScore;
       item.rarity = Math.pow(haveWantRatioScore, 6) * haveWantCountScore;
       item.haveWant = item.have + item.want;
     });
