@@ -32,7 +32,7 @@ class ExtensionPopup {
       if (request.message === 'sort:getPage') {
         this.onGetPage(request.data.pages);
       } else if (request.message === 'sort:success') {
-        this.onSortSuccess(request.data.count);
+        this.onSortSuccess(request.data.count, request.data.sortMethod);
       } else if (request.message === 'sort:error') {
         this.onSortError(request.data.err);
       }
@@ -42,7 +42,7 @@ class ExtensionPopup {
   sort(sortMethod) {
     this.disableActionButtons();
     this.setStatusText('Retrieving pages...');
-    this.sendMessage(sortMethod);
+    this.sendMessage(`sort:${sortMethod}`);
   }
 
   sendMessage(message, callback) {
@@ -66,20 +66,24 @@ class ExtensionPopup {
 
       this.setStatusText('Ready.');
 
-      if (res.state === 'ready') {
+      if (res.status === 'ready') {
         this.enableActionButtons();
-      } else {
+        this.setActiveButton(res.currentSort);
+      } else if (res.status === 'sorting') {
         this.disableActionButtons();
         this.setStatusText('Retrieving pages...');
+      } else {
+        this.showUnavailableText();
       }
     } else {
       this.showUnavailableText();
     }
   }
 
-  onSortSuccess(count) {
-    this.enableActionButtons()
-    this.setStatusText(`Sorted ${count} items.`);
+  onSortSuccess(count, sortMethod) {
+    this.enableActionButtons();
+    this.setActiveButton(sortMethod);
+    this.setStatusText(`Sorted ${count} items by ${sortMethod}.`);
   }
 
   onSortError(err) {
@@ -98,6 +102,18 @@ class ExtensionPopup {
   setPageDownloadProgress(pagesCount, totalPagesCount) {
     this.$els.status.text(`Downloaded page ${pagesCount}/${totalPagesCount}.`);
     this.$els.progress.css({ width: `${Math.floor(pagesCount / totalPagesCount * 100)}%` });
+  }
+
+  setActiveButton(sortMethod) {
+    if (sortMethod) {
+      this.$els.sortActions
+        .removeClass('active')
+        .filter(`[data-sort="${sortMethod}"]`)
+        .addClass('active');
+    } else {
+      this.$els.sortActions
+        .removeClass('active')
+    }
   }
 
   disableActionButtons() {

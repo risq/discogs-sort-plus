@@ -81,6 +81,10 @@ button:nth-last-child(-n+2) {
   border-bottom: none;
 }
 
+button.active {
+  background-color: #fefefe;
+}
+
 .status-container {
   position: relative;
 }

@@ -14,7 +14,8 @@ class ExtensionClient {
     this.initElements();
     this.initEvents();
 
-    this.state = 'ready';
+    this.status = 'ready';
+    this.currentSort = null;
   }
 
   initElements() {
@@ -30,17 +31,17 @@ class ExtensionClient {
       if (message === 'init') {
         this.onInit(reply);
       } else if (message === 'sort:score') {
-        this.sortAllPages(compareScore);
+        this.sortAllPages(message.replace('sort:', ''), compareScore);
       } else if (message === 'sort:rating') {
-        this.sortAllPages(compareRating);
+        this.sortAllPages(message.replace('sort:', ''), compareRating);
       } else if (message === 'sort:rarity') {
-        this.sortAllPages(compareRarity);
-      } else if (message === 'sort:haveWant') {
-        this.sortAllPages(compareHaveWant);
+        this.sortAllPages(message.replace('sort:', ''), compareRarity);
+      } else if (message === 'sort:have-want') {
+        this.sortAllPages(message.replace('sort:', ''), compareHaveWant);
       } else if (message === 'sort:have') {
-        this.sortAllPages(compareHave);
+        this.sortAllPages(message.replace('sort:', ''), compareHave);
       } else if (message === 'sort:want') {
-        this.sortAllPages(compareWant);
+        this.sortAllPages(message.replace('sort:', ''), compareWant);
       }
     });
   }
@@ -49,15 +50,10 @@ class ExtensionClient {
     if (!this.isAvailable()) {
       reply({err: true});
     } else {
-      console.log({
-        err: null,
-        state: this.state,
-        totalItemsCount: pageParser.getTotalItemsCount(),
-        itemsPerPageCount: pageParser.getItemsPerPageCount(),
-      })
       reply({
         err: null,
-        state: this.state,
+        status: this.status,
+        currentSort: this.currentSort,
         totalItemsCount: pageParser.getTotalItemsCount(),
         itemsPerPageCount: pageParser.getItemsPerPageCount(),
       });
@@ -68,27 +64,29 @@ class ExtensionClient {
     return pageParser.getTotalItemsCount() > 0;
   }
 
-  sortAllPages(sortMethod) {
+  sortAllPages(sortMethod, sortFunction) {
     this.hideUi();
-    this.state = 'sorting';
+    this.status = 'sorting';
     pageParser.getAllPagesItems()
-      .then(items => this.sortItems(items, sortMethod))
+      .then(items => this.sortItems(items, sortFunction))
       .then(items => {
-        this.state = 'ready';
-        messageBus.sendMessage('sort:success', { count: items.length });
+        this.status = 'ready';
+        this.currentSort = sortMethod;
+        messageBus.sendMessage('sort:success', { count: items.length, sortMethod: sortMethod });
       })
       .catch(err => {
         this.showUi();
-        this.state = 'ready';
+        this.status = 'ready';
+        this.currentSort = null;
         messageBus.sendMessage('sort:error', { err })
         console.log(err);
       });
   }
 
-  sortItems(items, sortMethod) {
+  sortItems(items, sortFunction) {
     this.clearPage();
 
-    items.sort(sortMethod)
+    items.sort(sortFunction)
       .reverse()
       .forEach(item => this.addItem(item.el));
 
