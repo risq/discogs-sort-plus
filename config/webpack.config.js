@@ -7,7 +7,6 @@ module.exports = {
   entry: {
     popup: './popup.js',
     content: './content/index.js',
-    reload: './reload.js',
     common: [
       'jquery',
       'bluebird',

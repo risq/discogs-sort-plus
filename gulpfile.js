@@ -104,12 +104,6 @@ gulp.task('build-dev', [], function(callback) {
 
 });
 
-gulp.task('reload', function() {
-  gulp.src('src/assets/reload.html')
-    .pipe(replace('__TIMESTAMP__', new Date().getTime().toString()))
-    .pipe(gulp.dest('./build'));
-});
-
 gulp.task('html', function() {
   gulp.src('src/assets/*.html')
     .pipe(gulp.dest('./build'));
@@ -118,7 +112,6 @@ gulp.task('html', function() {
 gulp.task('watch-static', [], function(callback) {
   runSequence(
     'static',
-    'reload',
     callback
   );
 });
@@ -126,12 +119,11 @@ gulp.task('watch-static', [], function(callback) {
 gulp.task('watch-webpack', [], function(callback) {
   runSequence(
     'build-dev',
-    'reload',
     callback
   );
 });
 
-gulp.task('dev', ['static', 'build-dev', 'reload', 'html'], function() {
+gulp.task('dev', ['static', 'build-dev', 'html'], function() {
   gulp.watch(['src/*.json'], ['watch-static']);
   gulp.watch(['src/css/*.css'], ['watch-static']);
   gulp.watch(['src/assets/*.png'], ['watch-static']);
