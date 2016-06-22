@@ -1,6 +1,6 @@
 {
-  "name": "chrome-extension-boilerplate",
-  "description": "A boilerplate to kickstart Chrome extension development.",
+  "name": "discogs-sort-plus",
+  "description": "Adds missing Discogs sort features: community rating, rarity, have/want...",
   "version": "0.0.1",
   "icons": {
     "16": "assets/icon_16x16.png",
@@ -17,7 +17,7 @@
   ],
   "browser_action": {
     "default_popup": "popup.html",
-    "default_title": "Simple example.",
+    "default_title": "Discogs Sort Plus",
     "default_icon": {
       "19": "assets/icon_19x19.png",
       "38": "assets/icon_38x38.png"
