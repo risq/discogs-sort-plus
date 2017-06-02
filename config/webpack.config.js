@@ -25,7 +25,7 @@ module.exports = {
       {
         test: /\.js$/,
         exclude: /\/node_modules/,
-        loader: 'babel',
+        loader: 'babel-loader',
       },
       {
         test: /\.css$/,
@@ -49,8 +49,8 @@ module.exports = {
   },
 
   resolve: {
-    extensions: ['', '.js', '.json'],
-    modulesDirectories: [
+    extensions: ['.js', '.json'],
+    modules: [
       '../node_modules',
     ],
   },
@@ -60,6 +60,9 @@ module.exports = {
       $: 'jquery',
       jQuery: 'jquery',
     }),
-   new webpack.optimize.CommonsChunkPlugin('common', 'common.js'),
+   new webpack.optimize.CommonsChunkPlugin({
+      name: 'common',
+      filename: 'common.js',
+    }),
  ],
 };
