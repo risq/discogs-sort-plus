@@ -9,10 +9,6 @@
     "128": "assets/icon_128x128.png"
   },
   "permissions": [
-    "activeTab",
-    "tabs",
-    "storage",
-    "cookies",
     "*://*.discogs.com/"
   ],
   "browser_action": {
