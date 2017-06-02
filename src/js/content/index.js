@@ -31,17 +31,17 @@ class ExtensionClient {
       if (message === 'init') {
         this.onInit(reply);
       } else if (message === 'sort:score') {
-        this.sortAllPages(message.replace('sort:', ''), compareScore);
+        this.sortAllPages('score', compareScore);
       } else if (message === 'sort:rating') {
-        this.sortAllPages(message.replace('sort:', ''), compareRating);
+        this.sortAllPages('rating', compareRating);
       } else if (message === 'sort:rarity') {
-        this.sortAllPages(message.replace('sort:', ''), compareRarity);
+        this.sortAllPages('rarity', compareRarity);
       } else if (message === 'sort:have-want') {
-        this.sortAllPages(message.replace('sort:', ''), compareHaveWant);
+        this.sortAllPages('have', compareHaveWant);
       } else if (message === 'sort:have') {
-        this.sortAllPages(message.replace('sort:', ''), compareHave);
+        this.sortAllPages('have', compareHave);
       } else if (message === 'sort:want') {
-        this.sortAllPages(message.replace('sort:', ''), compareWant);
+        this.sortAllPages('want', compareWant);
       }
     });
   }
@@ -88,6 +88,7 @@ class ExtensionClient {
 
     items.sort(sortFunction)
       .reverse()
+      .slice(0, 1000)
       .forEach(item => this.addItem(item.el));
 
     return items;

@@ -1,5 +1,7 @@
 'use strict';
 
+import messages from './messages';
+
 class ExtensionPopup {
   constructor() {
     this.initElements();
@@ -15,11 +17,12 @@ class ExtensionPopup {
       totalPagesCount: $('.total-pages-count'),
       status: $('.status'),
       progress: $('.progress'),
-      unavailableText: $('.unavailable'),
+      error: $('.error'),
+      errorText: $('.error-text'),
     };
 
     this.disableActionButtons();
-    this.hideUnavailableText();
+    this.hideError();
   }
 
   initEvents() {
@@ -56,34 +59,42 @@ class ExtensionPopup {
   }
 
   onInitResponse(res) {
-    if (res && res.err === null) {
-      this.totalItemsCount = res.totalItemsCount;
-      this.itemsPerPageCount = res.itemsPerPageCount;
-      this.totalPagesCount = Math.ceil(this.totalItemsCount / this.itemsPerPageCount)
+    if (!res || res.err) {
+      this.showError(messages.unavailable);
+      return;
+    }
 
-      this.$els.totalItemsCount.text(` (${this.totalItemsCount} items, ${this.totalPagesCount} pages)`);
-      this.$els.totalPagesCount.text(this.totalPagesCount);
+    this.totalItemsCount = res.totalItemsCount;
 
-      this.setStatusText('Ready.');
+    if (this.totalItemsCount > 5000) {
+      this.showError(messages.tooMuchItems);
+      return;
+    }
 
-      if (res.status === 'ready') {
-        this.enableActionButtons();
-        this.setActiveButton(res.currentSort);
-      } else if (res.status === 'sorting') {
-        this.disableActionButtons();
-        this.setStatusText('Retrieving pages...');
-      } else {
-        this.showUnavailableText();
-      }
+    this.itemsPerPageCount = res.itemsPerPageCount;
+    this.totalPagesCount = Math.ceil(this.totalItemsCount / this.itemsPerPageCount)
+
+    this.$els.totalItemsCount.text(` (${this.totalItemsCount} items, ${this.totalPagesCount} pages)`);
+    this.$els.totalPagesCount.text(this.totalPagesCount);
+
+    this.setStatusText('Ready.');
+
+    if (res.status === 'ready') {
+      this.enableActionButtons();
+      this.setActiveButton(res.currentSort);
+    } else if (res.status === 'sorting') {
+      this.disableActionButtons();
+      this.setStatusText('Retrieving pages...');
     } else {
-      this.showUnavailableText();
+      this.showError(messages.unavailable);
     }
   }
 
   onSortSuccess(count, sortMethod) {
     this.enableActionButtons();
     this.setActiveButton(sortMethod);
-    this.setStatusText(`Sorted ${count} items by ${sortMethod}.`);
+
+    this.setStatusText(`Sorted ${count} items by ${sortMethod}.${count > 1000 ? " Only the first 1000 results are shown." : ""}`);
   }
 
   onSortError(err) {
@@ -124,12 +135,13 @@ class ExtensionPopup {
     this.$els.sortActions.attr('disabled', false);
   }
 
-  showUnavailableText() {
-    this.$els.unavailableText.show();
+  showError(text) {
+    this.$els.errorText.text(text);
+    this.$els.error.show();
   }
 
-  hideUnavailableText() {
-    this.$els.unavailableText.hide();
+  hideError() {
+    this.$els.error.hide();
   }
 }
 

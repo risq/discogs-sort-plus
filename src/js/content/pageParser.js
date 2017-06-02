@@ -104,7 +104,7 @@ export default new class Pages {
   }
 
   getItemsPerPageCount() {
-    return parseInt($('#limit_top option[selected]').val() || 0);
+    return parseInt($('#limit_bottom option[selected]').val() || 0);
   }
 
   getRating(itemNode) {

@@ -100,10 +100,10 @@ button.active {
 }
 
 .status {
-  padding: 12px 16px;
+  padding: 12px 16px 10px;
 }
 
-.unavailable {
+.error {
   position: absolute;
   top: 0;
   left: 0;
@@ -116,7 +116,7 @@ button.active {
   z-index: 10;
 }
 
-.unavailable span {
+.error span {
   padding: 0 10%;
   font-size: 14px;
   font-style: italic;
