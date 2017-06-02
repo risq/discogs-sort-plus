@@ -22,8 +22,8 @@
   "content_scripts": [
     {
       "matches": [
-        "http://*.discogs.com/*",
-        "https://*.discogs.com/*"
+        "http://*.discogs.com/sell/*",
+        "https://*.discogs.com/sell/*"
       ],
       "js": [
         "common.js",

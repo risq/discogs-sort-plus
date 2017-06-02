@@ -60,7 +60,7 @@ class ExtensionClient {
     }
   }
 
-  isAvailable() { // TODO
+  isAvailable() {
     return pageParser.getTotalItemsCount() > 0;
   }
 

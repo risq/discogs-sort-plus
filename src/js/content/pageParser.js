@@ -2,10 +2,6 @@ import bluebird from 'bluebird';
 import messageBus from './messageBus';
 
 export default new class Pages {
-  constructor() {
-
-  }
-
   getAllPagesItems() {
     if (this.allPagesItems) {
       console.log('All pages items are already stored.')
