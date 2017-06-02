@@ -23,7 +23,9 @@
     {
       "matches": [
         "http://*.discogs.com/sell/*",
-        "https://*.discogs.com/sell/*"
+        "https://*.discogs.com/sell/*",
+        "http://*.discogs.com/seller/*",
+        "https://*.discogs.com/seller/*"
       ],
       "js": [
         "common.js",
