@@ -1,7 +1,7 @@
 {
   "name": "Discogs Sort Plus",
   "description": "Adds missing Discogs sort features: community rating, rarity, have/want...",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "icons": {
     "16": "assets/icon_16x16.png",
     "32": "assets/icon_32x32.png",
