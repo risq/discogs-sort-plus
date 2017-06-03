@@ -1,6 +1,6 @@
 {
   "name": "discogs-sort-plus",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Adds missing Discogs sort features: community rating, rarity, have/want...",
   "scripts": {
     "start": "gulp dev",
