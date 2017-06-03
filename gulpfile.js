@@ -9,6 +9,9 @@ var replace = require('gulp-replace');
 var exec = require('child_process').exec;
 var mkdirp = require('mkdirp');
 var bump = require('gulp-bump');
+var zip = require('gulp-zip');
+var changeCase = require('change-case')
+
 
 var getManifest = function() {
   var fs = require('fs');
@@ -38,9 +41,18 @@ gulp.task('lint', function() {
 gulp.task('pre-build', function(callback) {
   runSequence(
     'clean',
-    'bump',
     'lint',
     'static',
+    'js',
+    'html',
+    callback
+  );
+});
+
+gulp.task('build', ['pre-build'], function(callback) {
+  runSequence(
+    'crx',
+    'zip',
     callback
   );
 });
@@ -51,32 +63,30 @@ gulp.task('bump', function(){
   .pipe(gulp.dest('./'));
 });
 
-gulp.task('build', ['pre-build'], function(callback) {
-  var config = require('./config/webpack.config.js');
-  var compiler = webpack(config);
+gulp.task('zip', function() {
+    var manifest = getManifest();
+    gulp.src('build/**/*')
+        .pipe(zip(changeCase.paramCase(manifest.name + '.' + manifest.version) + '.zip'))
+        .pipe(gulp.dest('dist'));
+    }
+);
 
-  compiler.run(function(err, stats) {
+gulp.task('crx', function(callback) {
+  var manifest = getManifest();
+  var name = changeCase.paramCase(manifest.name + '.' + manifest.version);
+
+  mkdirp('./dist', function(err) {
     if (err) {
-      throw new gutil.PluginError('webpack-build', err);
+      throw new gutil.PluginError('build', err);
     }
 
-    gutil.log("[webpack:build-dev]", stats.toString({
-      colors: true
-    }));
+    var command = './node_modules/.bin/crx pack ./build -p ./config/extension.pem -o ./dist/';
+    command += name + '.crx';
 
-    var manifest = getManifest();
-    var name = manifest.name + '.' + manifest.version;
-    mkdirp('./dist', function(err) {
-      if (err) {
-        throw new gutil.PluginError('build', err);
-      }
+    console.log(command)
 
-      var command = './node_modules/.bin/crx pack ./build -p ./config/extension.pem -o ./dist/';
-      command += name + '.crx';
-
-      exec(command, function(err, stdout, stderr) {
-        callback();
-      });
+    exec(command, function(err, stdout, stderr) {
+      callback();
     });
   });
 });
@@ -86,7 +96,7 @@ gulp.task('static', function() {
     .pipe(gulp.dest('./build'));
 });
 
-gulp.task('build-dev', [], function(callback) {
+gulp.task('js', [], function(callback) {
   var config = require('./config/webpack.config.js');
   var compiler = webpack(config);
 
@@ -95,7 +105,7 @@ gulp.task('build-dev', [], function(callback) {
       throw new gutil.PluginError('webpack-build', err);
     }
 
-    gutil.log("[webpack:build-dev]", stats.toString({
+    gutil.log("[webpack:build]", stats.toString({
       colors: true
     }));
 
@@ -118,12 +128,12 @@ gulp.task('watch-static', [], function(callback) {
 
 gulp.task('watch-webpack', [], function(callback) {
   runSequence(
-    'build-dev',
+    'js',
     callback
   );
 });
 
-gulp.task('dev', ['static', 'build-dev', 'html'], function() {
+gulp.task('dev', ['static', 'js', 'html'], function() {
   gulp.watch(['src/*.json'], ['watch-static']);
   gulp.watch(['src/css/*.css'], ['watch-static']);
   gulp.watch(['src/assets/*.png'], ['watch-static']);
